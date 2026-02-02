@@ -21,7 +21,7 @@ Use JCIP annotations to document thread-safety guarantees:
 @ThreadSafe
 public final class Counter {
 
-    private final Object lock = new Object();  // 전용 락 객체 사용
+    private final Object lock = new Object();  // Use a dedicated lock object
 
     @GuardedBy("lock")
     private int count;
@@ -61,11 +61,11 @@ public final class AtomicCounter {
 ### ❌ Don't
 
 ```java
-public class Counter {  // @ThreadSafe 어노테이션 누락
+public class Counter {  // Missing @ThreadSafe annotation
 
-    private int count;  // @GuardedBy 어노테이션 누락
+    private int count;  // Missing @GuardedBy annotation
 
-    public synchronized int increment() {  // this를 락으로 사용 - 외부에서 데드락 유발 가능
+    public synchronized int increment() {  // Using this as a lock can cause external deadlocks
         return ++count;
     }
 }
@@ -134,7 +134,7 @@ public final class SomeClass {
 
     @Nullable
     public CompletionStage<@NonNull Integer> someOptional(int param) {
-        if (param > 0) return null;  // 절대 null을 반환하지 않음
+        if (param > 0) return null;  // Never return null
         return CompletableFuture.completedFuture(0);
     }
 }
@@ -191,7 +191,7 @@ public final class SomeClass {
 
     @NonNull
     public CompletionStage<@NonNull Integer> someOptional(int param) {
-        if (param > 0) throw new IllegalArgumentException("param should be zero or negative");  // 예외를 직접 던지지 않음
+        if (param > 0) throw new IllegalArgumentException("param should be zero or negative");  // Do not throw exceptions directly
         return CompletableFuture.completedFuture(0);
     }
 }
@@ -242,7 +242,7 @@ private final ExecutorService ioExecutor = Executors.newFixedThreadPool(10);
 @NonNull
 public CompletionStage<@NonNull Data> fetchData() {
     return CompletableFuture.supplyAsync(() -> {
-        // I/O 작업 - 전용 스레드 풀 사용
+        // I/O work - use a dedicated thread pool
         return blockingIoOperation();
     }, ioExecutor);
 }
@@ -257,16 +257,16 @@ public CompletionStage<@NonNull Data> fetchData() {
 **Don't** call `.get()` or `.join()` in async chains:
 
 ```java
-// ❌ BAD - 비동기 체인에서 블로킹 호출
+// ❌ BAD - blocking call in async chain
 public CompletionStage<String> bad() {
     return fetchData()
         .thenApply(data -> {
-            String result = otherAsyncCall().toCompletableFuture().join();  // 블로킹!
+            String result = otherAsyncCall().toCompletableFuture().join();  // Blocking!
             return process(data, result);
         });
 }
 
-// ✅ GOOD - thenCompose로 비동기 유지
+// ✅ GOOD - keep async with thenCompose
 public CompletionStage<String> good() {
     return fetchData()
         .thenCompose(data -> 
@@ -282,13 +282,13 @@ public CompletionStage<String> good() {
 Always handle exceptions in async chains:
 
 ```java
-// ❌ BAD - 예외 처리 없음
+// ❌ BAD - no exception handling
 public CompletionStage<Data> bad() {
     return fetchData()
-        .thenApply(this::process);  // 예외 발생 시 전파만 됨
+        .thenApply(this::process);  // Exceptions only propagate
 }
 
-// ✅ GOOD - 적절한 예외 처리
+// ✅ GOOD - proper exception handling
 public CompletionStage<Data> good() {
     return fetchData()
         .thenApply(this::process)
@@ -306,14 +306,14 @@ public CompletionStage<Data> good() {
 Shared mutable state requires synchronization even with CompletableFuture:
 
 ```java
-// ❌ BAD - 동기화되지 않은 공유 상태
+// ❌ BAD - unsynchronized shared state
 private int counter = 0;
 
 public CompletionStage<Integer> bad() {
     return CompletableFuture.supplyAsync(() -> counter++);  // race condition
 }
 
-// ✅ GOOD - 동시성 안전 타입 사용
+// ✅ GOOD - use concurrency-safe types
 private final AtomicInteger counter = new AtomicInteger(0);
 
 public CompletionStage<Integer> good() {

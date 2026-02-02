@@ -20,7 +20,7 @@ public final class PasswordService {
         try {
             return ENCODER.encode(new String(password));
         } finally {
-            Arrays.fill(password, '\0');  // 메모리에서 즉시 삭제
+            Arrays.fill(password, '\0');  // Clear from memory immediately
         }
     }
 
@@ -47,12 +47,12 @@ public final class PasswordService {
 
     @NonNull
     public String hash(@NonNull String password) {
-        // MD5, SHA1, SHA256 단독 사용 금지 - 레인보우 테이블 공격에 취약
+        // Do not use MD5/SHA1/SHA256 alone - vulnerable to rainbow table attacks
         return DigestUtils.sha256Hex(password);
     }
 
     public boolean verify(@NonNull String password, @NonNull String stored) {
-        // 타이밍 공격에 취약한 직접 비교 금지
+        // Avoid direct comparison vulnerable to timing attacks
         return hash(password).equals(stored);
     }
 }
@@ -91,7 +91,7 @@ public User findByEmail(@NonNull String email) throws SQLException {
 ```java
 @Nullable
 public User findByEmail(@NonNull String email) throws SQLException {
-    // SQL 인젝션 취약점!
+    // SQL injection vulnerability!
     String sql = "SELECT * FROM users WHERE email = '" + email + "'";
     try (var conn = dataSource.getConnection();
          var stmt = conn.createStatement();
@@ -138,7 +138,7 @@ public final class TokenGenerator {
 
     @NonNull
     public String generateToken() {
-        // 예측 가능한 난수 - 보안 용도 사용 금지
+        // Predictable random value - do not use for security
         return String.valueOf(new Random().nextLong());
     }
 }
@@ -154,7 +154,7 @@ Never log sensitive personal information.
 
 ```java
 public void processPayment(@NonNull PaymentRequest request) {
-    // 민감 정보 마스킹
+    // Mask sensitive data
     logger.info("Processing payment. userId={}, amount={}, cardLast4={}",
         request.userId(),
         request.amount(),
@@ -180,9 +180,9 @@ private String maskCard(@NonNull String cardNumber) {
 
 ```java
 public void processPayment(@NonNull PaymentRequest request) {
-    // PII 로깅 금지!
-    logger.info("Processing payment: {}", request);  // 카드번호 노출 가능
-    logger.debug("Card number: {}", request.cardNumber());  // 절대 금지
+    // Do not log PII!
+    logger.info("Processing payment: {}", request);  // Card number may be exposed
+    logger.debug("Card number: {}", request.cardNumber());  // Never do this
 }
 ```
 
@@ -196,17 +196,17 @@ Always validate and sanitize user input:
 
 ```java
 public User createUser(@NonNull String email, @NonNull String name) {
-    // 이메일 형식 검증
+    // Validate email format
     if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
         throw new IllegalArgumentException("Invalid email format");
     }
     
-    // 길이 제한
+    // Length limit
     if (name.length() > 100) {
         throw new IllegalArgumentException("Name too long");
     }
     
-    // HTML 이스케이프 (XSS 방지)
+    // HTML escape (prevent XSS)
     String safeName = HtmlUtils.htmlEscape(name);
     
     return new User(email, safeName);
@@ -219,22 +219,22 @@ public User createUser(@NonNull String email, @NonNull String name) {
 
 ```java
 public void uploadFile(@NonNull MultipartFile file) throws IOException {
-    // 파일 크기 제한
+    // File size limit
     if (file.getSize() > 10_000_000) {  // 10MB
         throw new IllegalArgumentException("File too large");
     }
     
-    // 확장자 화이트리스트
+    // Extension whitelist
     String ext = FilenameUtils.getExtension(file.getOriginalFilename());
     if (!List.of("jpg", "png", "pdf").contains(ext.toLowerCase())) {
         throw new IllegalArgumentException("Invalid file type");
     }
     
-    // 안전한 파일명 생성 (디렉토리 트래버설 방지)
+    // Generate a safe filename (prevent directory traversal)
     String safeFilename = UUID.randomUUID().toString() + "." + ext;
     Path uploadPath = Paths.get("/uploads").resolve(safeFilename);
     
-    // 경로 정규화 후 검증
+    // Validate after path normalization
     if (!uploadPath.normalize().startsWith("/uploads")) {
         throw new SecurityException("Invalid upload path");
     }
@@ -250,15 +250,15 @@ public void uploadFile(@NonNull MultipartFile file) throws IOException {
 Avoid Java serialization. If unavoidable, use whitelist filtering:
 
 ```java
-// 안전한 대안: JSON (Jackson, Gson)
+// Safer alternative: JSON (Jackson, Gson)
 ObjectMapper mapper = new ObjectMapper();
 User user = mapper.readValue(json, User.class);
 
-// Java 직렬화는 피하되, 불가피한 경우:
+// Avoid Java serialization; if unavoidable:
 ObjectInputStream ois = new ObjectInputStream(inputStream) {
     @Override
     protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
-        // 화이트리스트 검증
+        // Whitelist validation
         if (!ALLOWED_CLASSES.contains(desc.getName())) {
             throw new InvalidClassException("Unauthorized deserialization attempt", desc.getName());
         }

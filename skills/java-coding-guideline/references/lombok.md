@@ -36,15 +36,15 @@ The following annotations are explicitly banned:
 
 | Annotation | Reason |
 |------------|--------|
-| `@Setter` | 불변성 위반, 캡슐화 약화 |
-| `@Data` | `@Setter` 포함, equals/hashCode 자동 생성 위험 |
-| `@Value` | Record와 혼동, 암묵적 동작 과다 |
-| `@SneakyThrows` | Checked exception 우회, 예외 처리 의도 불명확 |
-| `@Cleanup` | try-with-resources 사용 권장 |
-| `@val` / `@var` | Java 10+ `var` 키워드 사용 |
-| `@Synchronized` | 명시적 동기화 코드 작성 권장 |
-| `@UtilityClass` | `private` 생성자와 `final class` 명시 권장 |
-| `@With` | 불변 객체 복사는 명시적 빌더 사용 |
-| `@Accessors` | 비표준 getter/setter 패턴 |
+| `@Setter` | Breaks immutability, weakens encapsulation |
+| `@Data` | Includes `@Setter`; risky auto-generated equals/hashCode |
+| `@Value` | Confuses with records; too much implicit behavior |
+| `@SneakyThrows` | Bypasses checked exceptions; unclear error handling intent |
+| `@Cleanup` | Prefer try-with-resources |
+| `@val` / `@var` | Use Java 10+ `var` keyword instead |
+| `@Synchronized` | Prefer explicit synchronization code |
+| `@UtilityClass` | Prefer explicit `private` constructor and `final class` |
+| `@With` | Prefer explicit builders for immutable copies |
+| `@Accessors` | Non-standard getter/setter patterns |
 
 **Rule**: Ban any annotation not explicitly listed in the Allowed section.
