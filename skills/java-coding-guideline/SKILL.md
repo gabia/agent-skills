@@ -341,9 +341,9 @@ public String readFile(@NonNull Path path) throws IOException {
     }
 }
 
-// 다중 리소스
+// Multiple resources
 public void copyStream(@NonNull InputStream in, @NonNull OutputStream out) throws IOException {
-    try (in; out) {  // Java 9+: 이미 선언된 변수 사용 가능
+    try (in; out) {  // Java 9+: can use already-declared variables
         in.transferTo(out);
     }
 }
@@ -357,7 +357,7 @@ public String readFile(@NonNull Path path) throws IOException {
     try {
         return reader.lines().collect(Collectors.joining("\n"));
     } finally {
-        reader.close();  // 예외 발생 시 원본 예외가 숨겨질 수 있음
+        reader.close();  // The original exception may be suppressed if one occurs here
     }
 }
 ```
@@ -470,13 +470,13 @@ public final class DatabaseConnection implements AutoCloseable {
 
     @Override
     public void close() {
-        if (closed) return;  // 멱등성: 여러 번 호출해도 안전
+        if (closed) return;  // Idempotent: safe to call multiple times
 
         closed = true;
         try {
             connection.close();
         } catch (SQLException e) {
-            // 로그만 남기고 예외는 던지지 않음 (close에서 예외 발생 시 원본 예외가 숨겨짐)
+            // Log only; do not throw (exceptions in close can suppress the original)
             logger.warn("Failed to close connection", e);
         }
     }
@@ -493,7 +493,7 @@ public final class DatabaseConnection implements AutoCloseable {
 
     @Override
     public void close() throws SQLException {
-        connection.close();  // 멱등성 없음, 예외 전파
+        connection.close();  // Not idempotent; exception propagates
     }
 }
 ```
@@ -508,11 +508,11 @@ Use `java.time` (JSR-310) exclusively. `java.util.Date` and `java.util.Calendar`
 
 | Use Case | Type | Example |
 |----------|------|---------|
-| 저장/전송 (UTC) | `Instant` | API 타임스탬프, DB 저장 |
-| 사용자 표시 | `ZonedDateTime` | UI에 표시할 시간 |
-| 날짜만 필요 | `LocalDate` | 생년월일, 만료일 |
-| 시간만 필요 | `LocalTime` | 영업시간, 알람 |
-| 기간 | `Duration` / `Period` | 경과 시간, 날짜 차이 |
+| Storage/transfer (UTC) | `Instant` | API timestamps, DB storage |
+| User display | `ZonedDateTime` | Time shown in UI |
+| Date only | `LocalDate` | Birthdays, expiration dates |
+| Time only | `LocalTime` | Business hours, alarms |
+| Duration | `Duration` / `Period` | Elapsed time, date differences |
 
 ### ✅ Do
 
@@ -520,13 +520,13 @@ Use `java.time` (JSR-310) exclusively. `java.util.Date` and `java.util.Calendar`
 public final class Event {
 
     @NonNull
-    private final Instant createdAt;  // UTC 타임스탬프
+    private final Instant createdAt;  // UTC timestamp
 
     @NonNull
-    private final LocalDate eventDate;  // 날짜만
+    private final LocalDate eventDate;  // Date only
 
     @NonNull
-    private final ZoneId timeZone;  // 표시용 타임존
+    private final ZoneId timeZone;  // Display time zone
 
     @NonNull
     public ZonedDateTime displayTime() {
@@ -540,10 +540,10 @@ Formatter reuse (thread-safe):
 ```java
 public final class DateFormats {
 
-    // DateTimeFormatter는 thread-safe하므로 상수로 재사용
+    // DateTimeFormatter is thread-safe, so reuse as constants
     public static final DateTimeFormatter ISO_DATE = DateTimeFormatter.ISO_LOCAL_DATE;
 
-    public static final DateTimeFormatter KOREAN_DATE = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
+    public static final DateTimeFormatter ENGLISH_DATE = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 
     private DateFormats() {}
 }
@@ -555,28 +555,28 @@ public final class DateFormats {
 public final class Event {
 
     @NonNull
-    private final Date createdAt;  // java.util.Date 사용 금지
+    private final Date createdAt;  // Do not use java.util.Date
 
     @NonNull
-    private final Calendar calendar;  // java.util.Calendar 사용 금지
+    private final Calendar calendar;  // Do not use java.util.Calendar
 
     @NonNull
     public String format() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  // thread-safe하지 않음
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  // Not thread-safe
         return sdf.format(createdAt);
     }
 }
 ```
 
-### Legacy Interop (경계에서만 허용)
+### Legacy Interop (boundary only)
 
 When interfacing with legacy APIs that require `Date`, convert at the boundary:
 
 ```java
-// Instant → Date (경계 레이어에서만)
+// Instant → Date (boundary layer only)
 Date legacyDate = Date.from(instant);
 
-// Date → Instant (수신 즉시 변환)
+// Date → Instant (convert immediately on receipt)
 Instant instant = legacyDate.toInstant();
 ```
 

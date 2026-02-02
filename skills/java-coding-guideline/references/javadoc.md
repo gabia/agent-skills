@@ -19,20 +19,20 @@ Document public APIs thoroughly. Package-private and private members need less d
 
 ```java
 /**
- * 사용자 인증을 처리하는 서비스.
+ * Service that handles user authentication.
  *
- * <p>이 서비스는 로그인, 로그아웃, 토큰 갱신 기능을 제공한다.</p>
+ * <p>This service provides login, logout, and token refresh functionality.</p>
  *
  * @since 1.0
  */
 public interface AuthService {
 
     /**
-     * 사용자 자격 증명을 검증하고 인증 토큰을 반환한다.
+     * Validates user credentials and returns an authentication token.
      *
-     * @param credentials 사용자 자격 증명
-     * @return 인증 토큰
-     * @throws AuthenticationException 자격 증명이 유효하지 않은 경우
+     * @param credentials the user credentials
+     * @return authentication token
+     * @throws AuthenticationException if the credentials are invalid
      */
     AuthToken authenticate(Credentials credentials);
 }
@@ -41,7 +41,7 @@ public interface AuthService {
 ### ❌ Don't
 
 ```java
-// public API에 Javadoc 없음
+// No Javadoc for public API
 public interface AuthService {
 
     AuthToken authenticate(Credentials credentials);
@@ -72,7 +72,7 @@ The first sentence is the **summary fragment** - it appears in method tables and
  * @return the formatted display name, never null
  */
 public String getDisplayName() {
-    // 사용자 이름 포맷팅
+    // Format user name
 }
 ```
 
@@ -84,7 +84,7 @@ public String getDisplayName() {
  * @return the created user
  */
 public User createUser(String email) {
-    // 사용자 생성 로직
+    // User creation logic
 }
 ```
 
@@ -92,21 +92,21 @@ public User createUser(String email) {
 
 ```java
 /**
- * This method gets the user's display name  // "This method" 불필요, 동사로 시작해야 함
+ * This method gets the user's display name  // "This method" is unnecessary; it should start with a verb
  */
 public String getDisplayName() {
     // ...
 }
 
 /**
- * Get the display name  // 3인칭 "Gets"를 사용해야 함
+ * Get the display name  // Use third-person "Gets"
  */
 public String getDisplayName() {
     // ...
 }
 
 /**
- * Returns the user's display name (e.g. John Doe).  // "e.g." 뒤의 마침표로 요약이 끊김
+ * Returns the user's display name (e.g. John Doe).  // The period after "e.g." ends the summary
  * This is used for UI display.
  */
 public String getDisplayName() {
@@ -121,12 +121,12 @@ public String getDisplayName() {
 Use block tags in this standard order:
 
 ```
-@param      (매개변수 - 선언 순서대로)
-@return     (반환값)
-@throws     (예외 - 알파벳 순서로)
-@see        (참조)
-@since      (도입 버전)
-@deprecated (폐기 예정)
+@param      (parameters - in declaration order)
+@return     (return value)
+@throws     (exceptions - alphabetical order)
+@see        (references)
+@since      (introduced version)
+@deprecated (scheduled for removal)
 ```
 
 ### @param
@@ -143,7 +143,7 @@ Document all parameters. Describe valid values and constraints.
  * @return list of matching users, empty list if no matches found
  */
 public List<User> search(String query, int limit, int offset) {
-    // 사용자 검색 로직
+    // User search logic
 }
 ```
 
@@ -159,7 +159,7 @@ Describe what is returned, including edge cases.
  * @return an Optional containing the user if found, or empty if not found
  */
 public Optional<User> findById(Long id) {
-    // 사용자 조회 로직
+    // User lookup logic
 }
 ```
 
@@ -179,7 +179,7 @@ Document all exceptions that can be thrown. Follow Design by Contract principles
  * @throws AccountNotFoundException if either account does not exist
  */
 public void transfer(Account from, Account to, BigDecimal amount) {
-    // 계좌 이체 로직
+    // Account transfer logic
 }
 ```
 
@@ -195,7 +195,7 @@ Link to related classes, methods, or external resources.
  * @see <a href="https://docs.oracle.com/javase/specs/jls/se17/html/jls-17.html">JLS Chapter 17</a>
  */
 public final class Counter {
-    // 카운터 구현
+    // Counter implementation
 }
 ```
 
@@ -212,7 +212,7 @@ Indicate the version when a feature was introduced.
  * @since 2.1
  */
 public boolean validateEmail(String email) {
-    // 이메일 검증 로직
+    // Email validation logic
 }
 ```
 
@@ -229,7 +229,7 @@ Always include `@deprecated` tag AND `@Deprecated` annotation. Explain why and s
  */
 @Deprecated(since = "2.5", forRemoval = true)
 public String getFullName() {
-    // 레거시 구현
+    // Legacy implementation
 }
 ```
 
@@ -253,7 +253,7 @@ Link to other classes, methods, or fields.
  * @see UserMapper#toDto(User)
  */
 public UserDTO toDto() {
-    // DTO 변환 로직
+    // DTO conversion logic
 }
 ```
 
@@ -273,7 +273,7 @@ Format inline code. Escapes HTML and renders in monospace.
  * @return {@code true} if empty, {@code false} otherwise
  */
 public boolean isEmpty() {
-    // 비어있는지 확인
+    // Check if empty
 }
 ```
 
@@ -328,7 +328,7 @@ Use `<pre>{@code ...}</pre>` for multi-line code blocks.
  * @throws ParseException if the JSON is malformed
  */
 public static User parse(String json) {
-    // JSON 파싱 로직
+    // JSON parsing logic
 }
 ```
 
@@ -338,10 +338,10 @@ public static User parse(String json) {
 /**
  * Example usage:
  *
- * User user = UserParser.parse(json);  // <pre> 없이 코드가 포맷팅되지 않음
+ * User user = UserParser.parse(json);  // Code is not formatted without <pre>
  *
  * <pre>
- * Map<String, User> map = new HashMap<>();  // {@code} 없이 제네릭이 HTML로 해석됨
+ * Map<String, User> map = new HashMap<>();  // Generics are interpreted as HTML without {@code}
  * </pre>
  */
 public static User parse(String json) {
@@ -385,7 +385,7 @@ Use HTML sparingly for formatting.
  * @return validation result
  */
 public ValidationResult validate(UserInput input) {
-    // 입력값 검증 로직
+    // Input validation logic
 }
 ```
 
@@ -393,11 +393,11 @@ public ValidationResult validate(UserInput input) {
 
 ```java
 /**
- * <h1>User Validator</h1>  // h1은 Javadoc이 이미 사용함
+ * <h1>User Validator</h1>  // Javadoc already uses h1
  *
- * <br><br>  // 문단 분리에는 <p>를 사용해야 함
+ * <br><br>  // Use <p> to separate paragraphs
  *
- * <font color="red">Important!</font>  // deprecated HTML 태그
+ * <font color="red">Important!</font>  // Deprecated HTML tag
  */
 public class UserValidator {
     // ...
@@ -423,7 +423,7 @@ Use maximum `<h2>` tags for headings (as `<h1>` is already used by Javadoc).
  * <p>This class is thread-safe.</p>
  */
 public final class SomeClass {
-    // 클래스 구현
+    // Class implementation
 }
 ```
 
@@ -431,7 +431,7 @@ public final class SomeClass {
 
 ```java
 /**
- * <h1>SomeClass</h1>  // h1은 사용하지 않음
+ * <h1>SomeClass</h1>  // Do not use h1
  */
 public final class SomeClass {
     // ...
@@ -450,13 +450,13 @@ Document exceptions with `@throws` following Design by Contract principles.
 public final class SomeClass {
 
     /**
-     * 입력값을 처리하고 결과를 반환한다.
+     * Processes the input value and returns the result.
      *
-     * <p>입력값이 유효한 범위 내에 있어야 한다.</p>
+     * <p>The input value must be within a valid range.</p>
      *
-     * @param param 처리할 입력값, 0 이하여야 함
-     * @return 처리 결과
-     * @throws IllegalArgumentException param이 0보다 큰 경우
+     * @param param input value to process, must be 0 or less
+     * @return processing result
+     * @throws IllegalArgumentException if param is greater than 0
      */
     public int func(int param) {
         if (param > 0) {
@@ -473,10 +473,10 @@ public final class SomeClass {
 public final class SomeClass {
 
     /**
-     * <p>기능 대략 설명</p>
-     * <p>기능 상세 설명</p>
+     * <p>Brief feature description</p>
+     * <p>Detailed feature description</p>
      */
-    public int func(int param) throws IllegalArgumentException {  // @throws 문서화 없이 시그니처에만 선언
+    public int func(int param) throws IllegalArgumentException {  // @throws declared only in signature without documentation
         if (param > 0) throw new IllegalArgumentException();
         return 0;
     }
@@ -512,7 +512,7 @@ public class UserRepository implements Repository<User> {
      */
     @Override
     public Optional<User> findById(Long id) {
-        // 데이터베이스 조회 로직
+        // Database query logic
     }
 }
 ```
@@ -522,8 +522,8 @@ public class UserRepository implements Repository<User> {
 ```java
 public class UserRepository implements Repository<User> {
 
-    // 오버라이드 메서드에 Javadoc 없음 - IDE에서 인터페이스 문서를 보여주지만
-    // 생성된 Javadoc HTML에서는 설명이 없음
+    // No Javadoc on overridden method - IDE shows interface docs, but
+    // generated Javadoc HTML has no description
     @Override
     public Optional<User> findById(Long id) {
         // ...
@@ -548,7 +548,7 @@ Document null behavior explicitly. Prefer using nullability annotations.
  */
 @Nullable
 public User findByUsername(@NonNull String username) {
-    // 사용자 검색 로직
+    // User search logic
 }
 ```
 
@@ -562,7 +562,7 @@ Better approach using Optional:
  * @return an Optional containing the user, or empty if not found
  */
 public Optional<User> findByUsername(@NonNull String username) {
-    // 사용자 검색 로직
+    // User search logic
 }
 ```
 
@@ -573,18 +573,18 @@ public Optional<User> findByUsername(@NonNull String username) {
 ### Empty or Useless Javadoc
 
 ```java
-// ❌ 빈 Javadoc
+// ❌ Empty Javadoc
 /**
  */
 public void process() { }
 
-// ❌ 메서드 이름을 반복하는 것은 무의미함
+// ❌ Repeating the method name is meaningless
 /**
  * Gets the name.
  */
 public String getName() { return name; }
 
-// ✅ 유용한 정보를 추가해야 함
+// ✅ Add useful information
 /**
  * Returns the user's display name, formatted as "First Last".
  *
@@ -596,13 +596,13 @@ public String getName() { return name; }
 ### Missing First Sentence Period
 
 ```java
-// ❌ 첫 문장 끝에 마침표 없음
+// ❌ No period at the end of the first sentence
 /**
  * Returns the user name
  * This is used for display purposes.
  */
 
-// ✅ 올바른 형식
+// ✅ Correct format
 /**
  * Returns the user name.
  *
@@ -613,15 +613,15 @@ public String getName() { return name; }
 ### Incorrect Tag Order
 
 ```java
-// ❌ 태그 순서가 잘못됨
+// ❌ Incorrect tag order
 /**
  * @return the result
  * @since 1.0
- * @param input the input  // @param은 @return 전에 와야 함
- * @throws Exception if error  // @throws는 @return 후에 와야 함
+ * @param input the input  // @param should come before @return
+ * @throws Exception if error  // @throws should come after @return
  */
 
-// ✅ 올바른 순서
+// ✅ Correct order
 /**
  * @param input the input
  * @return the result

@@ -43,7 +43,7 @@ public final class SomeClass {
 
     @Nullable
     public CompletionStage<@NonNull Integer> someOptional(int param) {
-        if (param > 0) return null;  // 절대 null을 반환하지 않음
+        if (param > 0) return null;  // Never return null
         return CompletableFuture.completedFuture(0);
     }
 }
@@ -100,7 +100,7 @@ public final class SomeClass {
 
     @NonNull
     public CompletionStage<@NonNull Integer> someOptional(int param) {
-        if (param > 0) throw new IllegalArgumentException("param should be zero or negative");  // 예외를 직접 던지지 않음
+        if (param > 0) throw new IllegalArgumentException("param should be zero or negative");  // Do not throw exceptions directly
         return CompletableFuture.completedFuture(0);
     }
 }
@@ -151,7 +151,7 @@ private final ExecutorService ioExecutor = Executors.newFixedThreadPool(10);
 @NonNull
 public CompletionStage<@NonNull Data> fetchData() {
     return CompletableFuture.supplyAsync(() -> {
-        // I/O 작업 - 전용 스레드 풀 사용
+        // I/O work - use a dedicated thread pool
         return blockingIoOperation();
     }, ioExecutor);
 }
@@ -180,7 +180,7 @@ public CompletionStage<String> good() {
 public CompletionStage<String> bad() {
     return fetchData()
         .thenApply(data -> {
-            String result = otherAsyncCall().toCompletableFuture().join();  // 블로킹!
+            String result = otherAsyncCall().toCompletableFuture().join();  // Blocking!
             return process(data, result);
         });
 }
