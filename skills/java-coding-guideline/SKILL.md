@@ -47,6 +47,57 @@ import static org.assertj.core.api.Assertions.*;
 
 ---
 
+## Vertical Spacing (Readability)
+
+Use consistent vertical spacing inside classes to make diffs smaller and code easier to scan.
+
+### Rule
+
+- Insert **exactly one blank line** between:
+  - field blocks and the next field block (when grouped)
+  - fields and the first constructor
+  - constructors and methods
+  - methods and the next method
+- Also insert **one blank line** right after the opening `{` of a class (before the first field/initializer), unless the class is intentionally empty.
+
+### ✅ Do
+
+```java
+public final class SomeClass {
+
+    @NonNull
+    private final String fieldA;
+
+    @NonNull
+    private final String fieldB;
+
+    public void someFunc() {
+        // some action
+    }
+
+    public String getFieldA() {
+        return fieldA;
+    }
+}
+```
+
+### ❌ Don't
+
+```java
+public final class SomeClass {
+    @NonNull
+    private final String fieldA;
+    @NonNull
+    private final String fieldB;
+    public void someFunc() {
+        // some action
+    }
+    public String getFieldA() {
+        return fieldA;
+    }
+}
+```
+
 ## Constructors
 
 Use a single primary constructor and delegate auxiliary constructors using `this()`.
