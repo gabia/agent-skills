@@ -1,6 +1,6 @@
 ---
 name: java-coding-guideline
-description: Fundamental Java coding standards and conventions that apply to all Java code. Load this skill first when starting any Java development task. Covers imports, constructors, nullability, immutability, exceptions, Javadoc, naming conventions, security, resource management, and concurrency patterns.
+description: Use when writing, reviewing, or refactoring Java code to enforce baseline conventions for imports, nullability, immutability, exceptions, resource handling, naming, and concurrency.
 license: MIT
 metadata:
   author: agent-skills
@@ -11,22 +11,6 @@ metadata:
 # Java Coding Guideline
 
 **CRITICAL**: These rules apply to ALL Java code unless explicitly overridden by more specific skills.
-
-## When to use this skill
-
-Load this skill at the start of any Java development task:
-- Writing new Java code
-- Reviewing Java code
-- Refactoring Java code
-- Creating Java classes, interfaces, or enums
-
-This skill contains universal Java coding standards that should always be followed.
-
-For domain-specific patterns, also load:
-- `java-spring-boot` - Spring Boot application patterns
-- `java-testing-deep-dive` - Testing strategies and patterns
-
----
 
 ## Import Statements
 
@@ -683,11 +667,6 @@ if (someCondition) {
 
 For deeper understanding of specific topics:
 - [references/async.md](references/async.md) - CompletableFuture and async programming patterns
-- [references/concurrency.md](references/concurrency.md) - Thread safety, JCIP annotations, and concurrent collections
 - [references/javadoc.md](references/javadoc.md) - Javadoc conventions and exception documentation
 - [references/lombok.md](references/lombok.md) - Allowed and banned Lombok annotations
 - [references/security-resources.md](references/security-resources.md) - Security best practices, password handling, SQL injection prevention, PII masking
-
-### Domain-Specific Skills
-
-- Load `java-testing-deep-dive` skill for testing strategies

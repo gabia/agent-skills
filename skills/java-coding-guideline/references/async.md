@@ -1,9 +1,5 @@
 # Java Async Deep Dive
 
-**When to use this guide**: Reference when working with multi-threaded code, CompletableFuture  or any async programming in Java.
-
----
-
 ## CompletableFuture
 
 ### Function Signature Rules
