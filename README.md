@@ -37,3 +37,17 @@ Fundamental Java coding standards and conventions that apply to all Java code.
 - Static factory method naming (`of` convention)
 - Package naming conventions
 - Variable and method naming
+
+#### java-xmlrpc-guideline
+
+Best practices for Java XML-RPC client and server implementation using Apache XML-RPC library.
+
+**When to use**: Load this skill when implementing XML-RPC clients or servers in Java, integrating with legacy XML-RPC APIs, or reviewing XML-RPC code for security vulnerabilities.
+
+**Key Topics**:
+- Apache XML-RPC client configuration
+- Server implementation patterns (standalone and servlet)
+- Transport and connection settings
+- Security hardening (CVE-2019-17570 mitigation)
+- Type mapping between XML-RPC and Java
+- Anti-patterns to avoid
