@@ -1,9 +1,5 @@
 # Java Security & Resource Management Deep Dive
 
-**When to use this guide**: Security-sensitive code (authentication, encryption, PII)
-
----
-
 ## Password Handling
 
 Never store passwords in plain text. Use BCrypt or Argon2 for hashing.

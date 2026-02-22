@@ -1,9 +1,5 @@
 # Javadoc
 
-**When to use this guide**: Reference when writing Javadoc comments for Java code
-
----
-
 ## When to Write Javadoc
 
 Document public APIs thoroughly. Package-private and private members need less documentation.

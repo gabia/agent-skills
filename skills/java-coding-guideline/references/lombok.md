@@ -1,7 +1,4 @@
-
-## General
-
-- **Allow Lombok**, but **restrict it to a small, approved set** of annotations, and **ban the risky ones**.
+# lombok
 
 ## Allowed
 
