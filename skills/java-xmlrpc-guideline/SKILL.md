@@ -72,7 +72,7 @@ public interface ServiceControlApi {
 **Rules:**
 - Always return `0` (regardless of success or failure)
 - Signal failure by throwing `XmlRpcException`
-- The return value has no meaning - it exists only because XML-RPC spec doesn't support void
+- The return value has no meaning - it exists only because XML-RPC spec doesn't support `void`
 
 **Why:** This is purely a workaround for XML-RPC library limitation. If the spec supported `void`, we would use `void`. The `int` return is meaningless; failure is communicated exclusively through exceptions.
 
