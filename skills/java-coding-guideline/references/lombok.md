@@ -12,6 +12,7 @@
 - `@RequiredArgsConstructor` (great for DI + `final` fields)
 - `@NoArgsConstructor` / `@AllArgsConstructor` **only when required by frameworks**, and document why
 - `@Builder` (good for complex constructors / test fixtures)
+- `@Jacksonized` (use with `@Builder` for immutable object deserialization)
 - `@StandardException` (good for exception)
 
 ### Use with caution
