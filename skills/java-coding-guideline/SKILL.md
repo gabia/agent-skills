@@ -461,6 +461,118 @@ public class SomeClass {
 
 ---
 
+## Assertions and Exceptions
+
+Choose between an assertion and an exception based on the trust boundary and the caller's recovery responsibility. Apply this rule to each condition, not to an entire class or method.
+
+Do not infer the boundary from a Java access modifier or a component name. A `public` method may be an internal API, while a `private` parser may process external input.
+
+### Decision Table
+
+| Condition | Mechanism |
+|-----------|-----------|
+| Invalid external request, command, message, or public API argument | Throw an exception |
+| Invalid runtime configuration | Throw an exception |
+| Network, database, filesystem, or external service failure | Throw an exception |
+| Security, authorization, or data integrity check | Throw an exception |
+| Caller must translate, retry, trace, log, or otherwise handle the failure | Throw an exception |
+| Programmer-controlled precondition or postcondition in an internal API | Use `assert` |
+| Relationship guaranteed by internal wiring or dispatch | Use `assert` |
+| State that is unreachable when the implementation is correct | Use `assert` |
+
+### Throw Exceptions Across External Boundaries
+
+Throw an exception when a failure can occur during valid runtime operation or the caller must be able to respond to it. External boundaries include:
+
+- HTTP, RPC, XML-RPC, CLI, message, and event handlers
+- Public library APIs called by independently developed consumers
+- User-supplied or tenant-supplied input
+- Runtime configuration
+- Unexpected or invalid data from a network, database, filesystem, or external service that can occur during normal operation
+
+Use an exception even when assertions are enabled. Externally visible behavior must not depend on the JVM `-ea` option.
+
+Choose an exception type that communicates the failure:
+
+- Use `IllegalArgumentException` for an invalid caller-supplied argument
+- Use `IllegalStateException` when the current runtime state cannot satisfy the operation
+- Use a domain-specific exception for operational failures that callers must distinguish
+- Use `UncheckedIOException` when intentionally exposing an I/O failure as an unchecked exception
+
+Document externally visible exceptions with `@throws`.
+
+### Assert Internal Invariants
+
+Use `assert` for programmer-controlled preconditions, postconditions, and invariants in internal APIs. This includes internal publishers, generators, converters, and parsers that consume trusted application data.
+
+Typical assertion cases include:
+
+- An internal resolver must produce a nonblank key
+- A generator or converter must produce a nonempty result
+- Related domain objects must reference each other
+- A persistence operation must populate an ID
+- A query immediately following an insert must return the inserted entity
+- An interceptor must have populated an internal context value
+- A branch must be unreachable when internal dispatch is correct
+
+```java
+public void publish(@NonNull String objectKey, @NonNull String generatedScript) {
+    assert !objectKey.isBlank();
+    assert !generatedScript.isBlank();
+
+    objectStore.put(objectKey, generatedScript);
+}
+```
+
+Assertions may be disabled in production. Therefore:
+
+- Never use assertions for external input validation
+- Never use assertions for authorization or security checks
+- Never use assertions for conditions that require runtime recovery
+- Never place side effects inside an assertion expression
+- Never catch `AssertionError` as normal control flow
+- Keep code correct and secure when assertions are disabled
+
+Add an assertion message when the invariant is not obvious.
+
+```java
+assert collector.getAgentId() == agent.getId() : "collector must own the agent";
+```
+
+### Apply the Rule Per Condition
+
+The same method may contain both assertions and exceptions.
+
+```java
+public void resize(@NonNull Pool pool, @NonNull Bucket bucket, long requestedSize, long minimumSize) {
+    assert pool.getId() == bucket.getPoolId();
+    assert pool.getType() == PoolType.OBJECT_STORAGE;
+
+    if (requestedSize < minimumSize) {
+        throw new IllegalArgumentException("requested size is smaller than the minimum size");
+    }
+}
+```
+
+The pool relationship is an internal routing invariant. The requested size is a runtime argument that a caller may legitimately provide incorrectly.
+
+An internal API must still throw exceptions for operational failures such as an S3 upload failure, database error, or network timeout. Internal API status alone does not turn an expected runtime failure into an assertion.
+
+### Validate Once, Then Assert Internally
+
+Validate external data at the boundary with an exception. After converting it into trusted internal data, use assertions to document the propagated invariant.
+
+A parser follows the same rule:
+
+- Throw a parse exception when parsing external or untrusted content
+- Assert assumptions when parsing content produced and validated by the same application
+
+### Exception Logging
+
+Throwing an exception does not mean that every layer should log it. Preserve the original cause and propagate the exception until a layer can handle, translate, retry, or terminate the operation. Log the exception once at that handling boundary instead of logging and rethrowing it at every layer.
+
+---
+
 ## Exception Catching
 
 Catch only the minimum necessary exceptions.
