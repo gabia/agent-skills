@@ -51,3 +51,21 @@ Best practices for Java XML-RPC client and server implementation using Apache XM
 - Security hardening (CVE-2019-17570 mitigation)
 - Type mapping between XML-RPC and Java
 - Anti-patterns to avoid
+
+### Ansible
+
+#### ansible-style-guideline
+
+Authoring and review style rules for Ansible roles, tasks, and variables.
+
+**When to use**: Load this skill when writing or reviewing Ansible roles, tasks, or variables, or fixing ansible-lint violations.
+
+**Key Topics**:
+- Required values with `undef()` and input validation with `meta/argument_specs.yml`
+- FQCN modules and standard task keywords (no `with_*`, `action:`, `key=value`)
+- Role-prefixed variable names (`__<prefix>_` for internal values)
+- Booleans and conditions
+- Minimal `become` (individual tasks only)
+- Error handling and tags
+- Files and templates (`template` over `copy`, `ansible_managed`, avoiding `lineinfile`)
+- Review checklist
