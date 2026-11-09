@@ -1,9 +1,9 @@
 ---
 name: ansible-style-guideline
 description: >
-  Ansible role/task/variable authoring style rules. Required variables use undef(), parameter validation uses argument_specs,
-  tasks use FQCN and standard keywords only, variables use the role prefix, booleans are true/false only, minimal become.
-  Use for "write ansible", "create a role", "style review", "fix lint", "check variable names", and similar requests.
+    Ansible role/task/variable authoring style rules. Required variables use undef(), parameter validation uses argument_specs,
+    tasks use FQCN and standard keywords only, variables use the role prefix, booleans are true/false only, minimal become.
+    Use for "write ansible", "create a role", "style review", "fix lint", "check variable names", and similar requests.
 ---
 
 # ansible-style-guideline
@@ -16,33 +16,33 @@ Format rules that ansible-lint or `.editorconfig` can check are not covered here
 - **Declare required values with `undef()`.** For values the user must pass, give no default and use `undef()`.
   Include a hint message.
 
-  ```yaml
-  # defaults/main.yml
-  opensearch_app_name: "{{ undef(hint='opensearch_app_name is required') }}"
-  opensearch_port: 9200
-  ```
+    ```yaml
+    # defaults/main.yml
+    opensearch_app_name: "{{ undef(hint='opensearch_app_name is required') }}"
+    opensearch_port: 9200
+    ```
 
 - **Validate parameters with `argument_specs`.** Define role inputs in `meta/argument_specs.yml`
   and specify type, `required`, and `choices`. Use `assert` only for cross-parameter checks that argument_specs cannot express.
 
-  ```yaml
-  # meta/argument_specs.yml
-  argument_specs:
-    main:
-      short_description: OpenSearch application library
-      options:
-        opensearch_app_name:
-          type: str
-          required: true
-        opensearch_port:
-          type: int
-  ```
+    ```yaml
+    # meta/argument_specs.yml
+    argument_specs:
+        main:
+            short_description: OpenSearch application library
+            options:
+                opensearch_app_name:
+                    type: str
+                    required: true
+                opensearch_port:
+                    type: int
+    ```
 
 ## 2. Variable and Role Names
 
 - **Every variable in a role uses the role name as its prefix.**
-  - role `opensearch` → `opensearch_*`
-  - role `gcldep_opensearch` → `gcldep_opensearch_*`
+    - role `opensearch` → `opensearch_*`
+    - role `gcldep_opensearch` → `gcldep_opensearch_*`
 - Derived or temporary values used only inside the role start with `__<prefix>_` (e.g. `__opensearch_bind_ips`). Users do not change them, so put them in `vars`, not `defaults`.
 - Referencing global variables (`gcldep_globals`, etc.) directly from a role follows the upper-layer rules.
 - Role names use only lowercase letters and underscores, no dashes. A name with dashes cannot be used inside a collection or as a variable prefix.
@@ -65,14 +65,14 @@ Format rules that ansible-lint or `.editorconfig` can check are not covered here
 - Use American English spelling. Ansible modules and official docs use American spelling, which helps searchability and consistency.
 - **Add `quiet: true` to `assert`.** Always add it unless there is a specific reason not to; it cuts unnecessary output when the check passes.
 
-  ```yaml
-  - name: Validate TLS settings
-    ansible.builtin.assert:
-      that:
-        - opensearch_tls_cert_path is defined
-      fail_msg: "Certificate path is required when TLS is enabled."
-      quiet: true
-  ```
+    ```yaml
+    - name: Validate TLS settings
+      ansible.builtin.assert:
+          that:
+              - opensearch_tls_cert_path is defined
+          fail_msg: "Certificate path is required when TLS is enabled."
+          quiet: true
+    ```
 
 ## 4. Booleans and Conditions
 
