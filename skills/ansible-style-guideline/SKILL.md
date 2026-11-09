@@ -23,7 +23,7 @@ Format rules that ansible-lint or `.editorconfig` can check are not covered here
   ```
 
 - **Validate parameters with `argument_specs`.** Define role inputs in `meta/argument_specs.yml`
-  and specify type, `required`, `choices`, and `default`. Use `assert` only for cross-parameter checks that argument_specs cannot express.
+  and specify type, `required`, and `choices`. Use `assert` only for cross-parameter checks that argument_specs cannot express.
 
   ```yaml
   # meta/argument_specs.yml
@@ -36,7 +36,6 @@ Format rules that ansible-lint or `.editorconfig` can check are not covered here
           required: true
         opensearch_port:
           type: int
-          default: 9200
   ```
 
 ## 2. Variable and Role Names
