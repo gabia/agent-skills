@@ -5,8 +5,12 @@ charset = utf-8
 
 [*.{md,MD}]
 indent_style = space
-indent_size = 4
+indent_size = 2
 insert_final_newline = true
+trim_trailing_whitespace = false
+
+# [IntelliJ] Keep 2-space indent on sublists (default continuation indent is 4)
+ij_continuation_indent_size = 2
 
 [*.{json,yml,yaml,toml}]
 indent_style = space
