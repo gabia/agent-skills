@@ -25,6 +25,7 @@ Fundamental Java coding standards and conventions that apply to all Java code.
 **When to use**: Load this skill at the start of any Java development task - writing, reviewing, or refactoring Java code.
 
 **Key Topics**:
+
 - Import statements (no wildcards)
 - Constructor patterns (single primary constructor with delegation)
 - Nullability handling (`@Nullable` annotations over `Optional`)
@@ -45,6 +46,7 @@ Best practices for Java XML-RPC client and server implementation using Apache XM
 **When to use**: Load this skill when implementing XML-RPC clients or servers in Java, integrating with legacy XML-RPC APIs, or reviewing XML-RPC code for security vulnerabilities.
 
 **Key Topics**:
+
 - Apache XML-RPC client configuration
 - Server implementation patterns (standalone and servlet)
 - Transport and connection settings
@@ -61,6 +63,7 @@ Authoring and review style rules for Ansible roles, tasks, and variables.
 **When to use**: Load this skill when writing or reviewing Ansible roles, tasks, or variables, or fixing ansible-lint violations.
 
 **Key Topics**:
+
 - Required values with `undef()` and input validation with `meta/argument_specs.yml`
 - FQCN modules and standard task keywords (no `with_*`, `action:`, `key=value`)
 - Role-prefixed variable names (`__<prefix>_` for internal values)

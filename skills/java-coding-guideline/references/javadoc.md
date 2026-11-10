@@ -4,12 +4,12 @@
 
 Document public APIs thoroughly. Package-private and private members need less documentation.
 
-| Visibility | Requirement | Notes |
-|------------|-------------|-------|
-| `public` | **Required** | External API - must be documented |
-| `protected` | **Recommended** | Subclass API - should be documented |
-| `package-private` | Optional | Internal API - document complex logic |
-| `private` | Optional | Implementation detail - document if non-obvious |
+| Visibility        | Requirement     | Notes                                           |
+| ----------------- | --------------- | ----------------------------------------------- |
+| `public`          | **Required**    | External API - must be documented               |
+| `protected`       | **Recommended** | Subclass API - should be documented             |
+| `package-private` | Optional        | Internal API - document complex logic           |
+| `private`         | Optional        | Implementation detail - document if non-obvious |
 
 ### ✅ Do
 
@@ -353,15 +353,15 @@ Use HTML sparingly for formatting.
 
 ### Allowed Tags
 
-| Tag | Purpose |
-|-----|---------|
-| `<p>` | Separate paragraphs |
-| `<ul>`, `<ol>`, `<li>` | Lists |
-| `<pre>` | Preformatted text (with `{@code}`) |
-| `<table>`, `<tr>`, `<th>`, `<td>` | Tables |
-| `<h2>`, `<h3>`, `<h4>` | Headings (never `<h1>`) |
-| `<em>`, `<strong>` | Emphasis |
-| `<a href="...">` | External links |
+| Tag                               | Purpose                            |
+| --------------------------------- | ---------------------------------- |
+| `<p>`                             | Separate paragraphs                |
+| `<ul>`, `<ol>`, `<li>`            | Lists                              |
+| `<pre>`                           | Preformatted text (with `{@code}`) |
+| `<table>`, `<tr>`, `<th>`, `<td>` | Tables                             |
+| `<h2>`, `<h3>`, `<h4>`            | Headings (never `<h1>`)            |
+| `<em>`, `<strong>`                | Emphasis                           |
+| `<a href="...">`                  | External links                     |
 
 ### ✅ Do
 

@@ -13,13 +13,13 @@ Design XML-RPC APIs with clear exception handling, proper return types, and inte
 
 ## Quick Reference
 
-| Scenario | Pattern |
-|----------|---------|
-| API interface method | `ReturnType method(Param p) throws XmlRpcException` |
-| Void-like operation | Return `int`, always `0` (value is meaningless, workaround for spec limitation) |
-| Success result | Return value (DTO, primitive, etc.) |
-| Failure result | Throw `XmlRpcException` |
-| DTO serialization | Use JAXB annotations (`@XmlRootElement`, `@XmlAttribute`) |
+| Scenario             | Pattern                                                                         |
+| -------------------- | ------------------------------------------------------------------------------- |
+| API interface method | `ReturnType method(Param p) throws XmlRpcException`                             |
+| Void-like operation  | Return `int`, always `0` (value is meaningless, workaround for spec limitation) |
+| Success result       | Return value (DTO, primitive, etc.)                                             |
+| Failure result       | Throw `XmlRpcException`                                                         |
+| DTO serialization    | Use JAXB annotations (`@XmlRootElement`, `@XmlAttribute`)                       |
 
 ## Exception Handling
 
@@ -70,6 +70,7 @@ public interface ServiceControlApi {
 ```
 
 **Rules:**
+
 - Always return `0` (regardless of success or failure)
 - Signal failure by throwing `XmlRpcException`
 - The return value has no meaning - it exists only because XML-RPC spec doesn't support `void`
@@ -78,11 +79,11 @@ public interface ServiceControlApi {
 
 ### Success vs Failure: Clear Separation
 
-| Outcome | How to Signal |
-|---------|---------------|
-| Operation succeeded | Return value |
+| Outcome             | How to Signal                        |
+| ------------------- | ------------------------------------ |
+| Operation succeeded | Return value                         |
 | Query found nothing | Return empty/false (this is success) |
-| Operation failed | Throw `XmlRpcException` |
+| Operation failed    | Throw `XmlRpcException`              |
 
 **Example - Query API:**
 
@@ -109,6 +110,7 @@ public interface ServiceControlApi {
 - Service failed to start → throw `XmlRpcException` (this is how failure is signaled)
 
 **Why this matters:**
+
 - Returning error codes in response (like `-1` or error field in DTO) makes XML-RPC request appear successful
 - Server logs show success, no stack trace
 - Client must inspect response to detect failure
@@ -126,14 +128,14 @@ DTOs must use XML structures via JAXB for cross-language compatibility:
 public class ComplexJaxbDto implements Element {
     @XmlAttribute
     private String type;
-    
+
     @XmlAttribute
     private String number;
-    
+
     private List<NestedDto> nestedDtos;
-    
+
     private ComplexJaxbDto() { }
-    
+
     public static final class NestedDto {
         private String value;
         private NestedDto() { }
@@ -154,11 +156,13 @@ public class SerializableDto implements Serializable {
 ### Serialization Comparison
 
 **Serializable output (unreadable, Java-only):**
+
 ```xml
 <ex:serializable>rO0ABXNyACx0aWwueG1scnBj...</ex:serializable>
 ```
 
 **JAXB output (readable, cross-language):**
+
 ```xml
 <ex:jaxb>
     <complexJaxbDto number="number" type="type">
@@ -173,6 +177,7 @@ public class SerializableDto implements Serializable {
 ```
 
 **Why JAXB:**
+
 - XML-RPC is designed for interoperability
 - Serializable limits clients to Java
 - JAXB produces human-readable XML
@@ -180,24 +185,26 @@ public class SerializableDto implements Serializable {
 
 ## Common Mistakes
 
-| Mistake | Problem | Fix |
-|---------|---------|-----|
-| Missing `throws XmlRpcException` | Client can't receive errors | Add to all API methods |
-| Using `void` return type | XML-RPC library doesn't support it | Use `int`, always return `0` |
-| Returning `-1` or other codes | Meaningless, creates confusion | Always return `0`, use exception for failure |
-| Error codes in DTO fields | Request appears successful | Throw `XmlRpcException` |
-| Using `Serializable` | Java-only, unreadable | Use JAXB annotations |
-| Using `enabledForException` | Java-only | Avoid, use standard faults |
+| Mistake                          | Problem                            | Fix                                          |
+| -------------------------------- | ---------------------------------- | -------------------------------------------- |
+| Missing `throws XmlRpcException` | Client can't receive errors        | Add to all API methods                       |
+| Using `void` return type         | XML-RPC library doesn't support it | Use `int`, always return `0`                 |
+| Returning `-1` or other codes    | Meaningless, creates confusion     | Always return `0`, use exception for failure |
+| Error codes in DTO fields        | Request appears successful         | Throw `XmlRpcException`                      |
+| Using `Serializable`             | Java-only, unreadable              | Use JAXB annotations                         |
+| Using `enabledForException`      | Java-only                          | Avoid, use standard faults                   |
 
 ## Idempotency Decisions
 
 For action APIs, decide if operation should be idempotent:
 
 **Idempotent approach:**
+
 - `start()` on running service → return `0`
 - Easier for clients, more forgiving
 
 **Strict approach:**
+
 - `start()` on running service → throw `XmlRpcException`
 - Explicit about state transitions
 
