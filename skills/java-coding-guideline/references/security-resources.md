@@ -31,6 +31,7 @@ public final class PasswordService {
 ```
 
 **Key Points**:
+
 - Use `char[]` instead of `String` for passwords (can be zeroed out)
 - Use BCrypt with work factor 10-12
 - Clear password from memory immediately after use
@@ -77,6 +78,7 @@ public User findByEmail(@NonNull String email) throws SQLException {
 ```
 
 **Additional Protection**:
+
 - Use ORM (JPA/Hibernate) with named parameters
 - Validate input length and format
 - Use stored procedures for complex queries
@@ -120,6 +122,7 @@ public final class TokenGenerator {
 ```
 
 **Use Cases for SecureRandom**:
+
 - Session tokens
 - CSRF tokens
 - API keys
@@ -164,6 +167,7 @@ private String maskCard(@NonNull String cardNumber) {
 ```
 
 **PII Categories to Mask**:
+
 - Credit card numbers (show last 4 digits only)
 - Email addresses (mask middle: `u***@example.com`)
 - Phone numbers (mask middle digits)
@@ -196,15 +200,15 @@ public User createUser(@NonNull String email, @NonNull String name) {
     if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
         throw new IllegalArgumentException("Invalid email format");
     }
-    
+
     // Length limit
     if (name.length() > 100) {
         throw new IllegalArgumentException("Name too long");
     }
-    
+
     // HTML escape (prevent XSS)
     String safeName = HtmlUtils.htmlEscape(name);
-    
+
     return new User(email, safeName);
 }
 ```
@@ -219,22 +223,22 @@ public void uploadFile(@NonNull MultipartFile file) throws IOException {
     if (file.getSize() > 10_000_000) {  // 10MB
         throw new IllegalArgumentException("File too large");
     }
-    
+
     // Extension whitelist
     String ext = FilenameUtils.getExtension(file.getOriginalFilename());
     if (!List.of("jpg", "png", "pdf").contains(ext.toLowerCase())) {
         throw new IllegalArgumentException("Invalid file type");
     }
-    
+
     // Generate a safe filename (prevent directory traversal)
     String safeFilename = UUID.randomUUID().toString() + "." + ext;
     Path uploadPath = Paths.get("/uploads").resolve(safeFilename);
-    
+
     // Validate after path normalization
     if (!uploadPath.normalize().startsWith("/uploads")) {
         throw new SecurityException("Invalid upload path");
     }
-    
+
     file.transferTo(uploadPath);
 }
 ```
@@ -268,6 +272,7 @@ ObjectInputStream ois = new ObjectInputStream(inputStream) {
 ## Summary Checklist
 
 ### Security
+
 - ✅ Use BCrypt/Argon2 for password hashing
 - ✅ Use SecureRandom for security-sensitive random values
 - ✅ Mask PII in logs

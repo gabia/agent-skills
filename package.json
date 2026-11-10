@@ -1,0 +1,6 @@
+{
+  "name": "agent-skills",
+  "devDependencies": {
+    "prettier": "3.8.3"
+  }
+}

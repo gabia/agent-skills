@@ -23,7 +23,7 @@ public final class SomeClass {
         if (param > 0) return CompletableFuture.completedFuture(null);
 
         return CompletableFuture.completedFuture(0);
-    } 
+    }
 }
 ```
 
@@ -124,7 +124,7 @@ When chaining async operations, use appropriate methods:
 public CompletionStage<@NonNull UserProfile> getUserProfile(@NonNull String userId) {
     return fetchUser(userId)
         .thenCompose(user -> fetchUserSettings(user.id()))
-        .thenCombine(fetchUserPreferences(userId), (settings, prefs) -> 
+        .thenCombine(fetchUserPreferences(userId), (settings, prefs) ->
             new UserProfile(settings, prefs)
         )
         .exceptionally(ex -> {
@@ -164,7 +164,7 @@ public CompletionStage<@NonNull Data> fetchData() {
 ```java
 public CompletionStage<String> good() {
     return fetchData()
-        .thenCompose(data -> 
+        .thenCompose(data ->
             otherAsyncCall().thenApply(result -> process(data, result))
         );
 }

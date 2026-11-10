@@ -469,16 +469,16 @@ Do not infer the boundary from a Java access modifier or a component name. A `pu
 
 ### Decision Table
 
-| Condition | Mechanism |
-|-----------|-----------|
-| Invalid external request, command, message, or public API argument | Throw an exception |
-| Invalid runtime configuration | Throw an exception |
-| Network, database, filesystem, or external service failure | Throw an exception |
-| Security, authorization, or data integrity check | Throw an exception |
+| Condition                                                                 | Mechanism          |
+| ------------------------------------------------------------------------- | ------------------ |
+| Invalid external request, command, message, or public API argument        | Throw an exception |
+| Invalid runtime configuration                                             | Throw an exception |
+| Network, database, filesystem, or external service failure                | Throw an exception |
+| Security, authorization, or data integrity check                          | Throw an exception |
 | Caller must translate, retry, trace, log, or otherwise handle the failure | Throw an exception |
-| Programmer-controlled precondition or postcondition in an internal API | Use `assert` |
-| Relationship guaranteed by internal wiring or dispatch | Use `assert` |
-| State that is unreachable when the implementation is correct | Use `assert` |
+| Programmer-controlled precondition or postcondition in an internal API    | Use `assert`       |
+| Relationship guaranteed by internal wiring or dispatch                    | Use `assert`       |
+| State that is unreachable when the implementation is correct              | Use `assert`       |
 
 ### Throw Exceptions Across External Boundaries
 
@@ -597,10 +597,10 @@ try {
 }
 ```
 
-
 ### Implementing AutoCloseable
 
 When implementing `AutoCloseable`:
+
 1. Make `close()` **idempotent** (safe to call multiple times)
 2. **Never throw exceptions** from `close()` (suppressed exceptions problem)
 3. **Log errors** instead of throwing them
@@ -653,13 +653,13 @@ Use `java.time` (JSR-310) exclusively. `java.util.Date` and `java.util.Calendar`
 
 ### Type Selection
 
-| Use Case | Type | Example |
-|----------|------|---------|
-| Storage/transfer (UTC) | `Instant` | API timestamps, DB storage |
-| User display | `ZonedDateTime` | Time shown in UI |
-| Date only | `LocalDate` | Birthdays, expiration dates |
-| Time only | `LocalTime` | Business hours, alarms |
-| Duration | `Duration` / `Period` | Elapsed time, date differences |
+| Use Case               | Type                  | Example                        |
+| ---------------------- | --------------------- | ------------------------------ |
+| Storage/transfer (UTC) | `Instant`             | API timestamps, DB storage     |
+| User display           | `ZonedDateTime`       | Time shown in UI               |
+| Date only              | `LocalDate`           | Birthdays, expiration dates    |
+| Time only              | `LocalTime`           | Business hours, alarms         |
+| Duration               | `Duration` / `Period` | Elapsed time, date differences |
 
 ### ✅ Do
 
@@ -739,7 +739,7 @@ Use Lombok-style builders for API consistency.
 
 - Use `var` keyword from JVM 10+
 - Use meaningful variable names
-    - But avoid too long variable, function, field names
+  - But avoid too long variable, function, field names
 - Method names should be verbs
 - Avoid using 'get' prefix except for getters
 
@@ -778,6 +778,7 @@ if (someCondition) {
 ### Reference Guides
 
 For deeper understanding of specific topics:
+
 - [references/async.md](references/async.md) - CompletableFuture and async programming patterns
 - [references/javadoc.md](references/javadoc.md) - Javadoc conventions and exception documentation
 - [references/lombok.md](references/lombok.md) - Allowed and banned Lombok annotations
