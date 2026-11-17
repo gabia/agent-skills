@@ -38,6 +38,8 @@ Format rules that ansible-lint or `.editorconfig` can check are not covered here
           type: int
   ```
 
+- Write `short_description` as a short noun phrase and put explanations in `description`. Ansible prints it in the run log as part of the argument validation task name (`Validating arguments against arg spec 'main' - <short_description>`).
+
 ## 2. Variable and Role Names
 
 - **Every variable in a role uses the role name as its prefix.**
@@ -55,7 +57,11 @@ Format rules that ansible-lint or `.editorconfig` can check are not covered here
   `changed_when`, `failed_when`, `notify`, `tags`, etc.
 - Do not use legacy shorthand or alias forms: `action:`, `local_action:`, `with_*` (→ `loop`), short module names (`copy:`).
 - Write module arguments in YAML style, not `key=value`. With `key=value`, every value is parsed as a string and lint cannot check the arguments.
-- Give every task a meaningful `name`. Write it in the imperative (e.g. "Ensure service is running") and do not put variables or loop items in it. Names appear in run logs and are used by `--start-at-task`, so a fixed string is easier to find.
+- Give every task a short imperative `name` of about four words (e.g. "Install quadlet files"). Names appear in run logs and are used by `--start-at-task`.
+  - Do not repeat the role's own service name. The log already prints the role name as a prefix.
+  - Do not add "through X" or "when ..." clauses. Conditions belong in `when`.
+  - Do not put loop items or host-specific values in a name. Task names are templated before running on each host, so such values appear unrendered. A variable that is the same on every host may go at the end of the name (ansible-lint `name[template]`).
+  - Do not rename existing handlers. Other roles notify them by name.
 - Prefer descriptive task names over comments. Delete dead code instead of commenting it out; git keeps the history.
 - Add `changed_when: false` to tasks that only gather information. Without it, the task reports changed on every run and real changes become hard to spot.
 - Set `state` explicitly to `present` or `absent`. `latest` can install a different version on each run, so results are not reproducible.
@@ -63,6 +69,7 @@ Format rules that ansible-lint or `.editorconfig` can check are not covered here
 - Use shell commands (`command`, `shell`) only when no dedicated module can replace them, and leave a comment explaining why. Shell commands do not guarantee idempotency or check mode support.
 - Put one space inside Jinja delimiters (`{{ variable_name }}`). This matches the ansible-lint `jinja[spacing]` rule.
 - Use American English spelling. Ansible modules and official docs use American spelling, which helps searchability and consistency.
+- Write Korean `fail_msg` in 개조식, ending with a noun form such as `~함` or `~없음` (e.g. `인증서가 필요함`), not a `~하다` sentence.
 - **Add `quiet: true` to `assert`.** Always add it unless there is a specific reason not to; it cuts unnecessary output when the check passes.
 
   ```yaml
